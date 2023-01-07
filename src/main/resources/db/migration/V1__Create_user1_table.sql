@@ -1,5 +1,5 @@
 
-create table PUBLIC.USER1
+create table USER1
 (
     ID           INTEGER auto_increment
         primary key,
