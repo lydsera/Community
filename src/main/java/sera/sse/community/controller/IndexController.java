@@ -43,6 +43,9 @@ public class IndexController {
         }
 
         List<InvitationDTO> invitationList = invitationService.list();
+        for (InvitationDTO invitationDTO : invitationList) {
+            invitationDTO.setDescription("reset");
+        }
         model.addAttribute("invitations",invitationList);
         return "index";
     }
