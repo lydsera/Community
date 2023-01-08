@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import sera.sse.community.dto.InvitationDTO;
+import sera.sse.community.dto.PaginationDTO;
 import sera.sse.community.mapper.InvitationMapper;
 import sera.sse.community.mapper.UserMapper;
 import sera.sse.community.model.Invitation;
@@ -24,7 +25,9 @@ public class IndexController {
     private InvitationService invitationService;
     @GetMapping("/")
     public String index(HttpServletRequest request,
-                        Model model)
+                        Model model,
+                        @RequestParam(name = "page",defaultValue = "1") Integer page,
+                        @RequestParam(name = "size",defaultValue = "2") Integer size)
     {
         Cookie[] cookies = request.getCookies();
         if(cookies!=null && cookies.length!=0){
@@ -42,11 +45,8 @@ public class IndexController {
             }
         }
 
-        List<InvitationDTO> invitationList = invitationService.list();
-        for (InvitationDTO invitationDTO : invitationList) {
-            invitationDTO.setDescription("reset");
-        }
-        model.addAttribute("invitations",invitationList);
+        PaginationDTO pagination = invitationService.list(page,size);
+        model.addAttribute("pagination",pagination);
         return "index";
     }
 

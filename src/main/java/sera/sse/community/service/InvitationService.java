@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sera.sse.community.dto.InvitationDTO;
+import sera.sse.community.dto.PaginationDTO;
 import sera.sse.community.mapper.InvitationMapper;
 import sera.sse.community.mapper.UserMapper;
 import sera.sse.community.model.Invitation;
@@ -18,9 +19,17 @@ public class InvitationService {
     private InvitationMapper invitationMapper;
     @Autowired
     private UserMapper userMapper;
-    public List<InvitationDTO> list() {
-        List<Invitation> invitations = invitationMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        Integer totalCount = invitationMapper.count();
+        paginationDTO.setPagination(totalCount,page,size);
+        if(page<1) page=1;
+        if(page>paginationDTO.getTotalPage()) page=paginationDTO.getTotalPage();
+        Integer offset = size * (page-1);
+        List<Invitation> invitations = invitationMapper.list(offset,size);
         List<InvitationDTO> invitationDTOList = new ArrayList<>();
+
+
         for (Invitation invitation : invitations) {
             User user = userMapper.findById(invitation.getCreator());
             InvitationDTO invitationDTO = new InvitationDTO();
@@ -28,6 +37,8 @@ public class InvitationService {
             invitationDTO.setUser(user);
             invitationDTOList.add(invitationDTO);
         }
-        return invitationDTOList;
+        paginationDTO.setInvitations(invitationDTOList);
+
+        return paginationDTO;
     }
 }
