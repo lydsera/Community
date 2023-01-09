@@ -21,12 +21,58 @@ public class InvitationService {
     private UserMapper userMapper;
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
+        Integer totalPage;
         Integer totalCount = invitationMapper.count();
-        paginationDTO.setPagination(totalCount,page,size);
+
+        if(totalCount%size==0) {
+            totalPage = totalCount/size;
+        } else {
+            totalPage = totalCount/size+1;
+        }
+
+
         if(page<1) page=1;
-        if(page>paginationDTO.getTotalPage()) page=paginationDTO.getTotalPage();
+        if(page>totalPage) page=totalPage;
+        paginationDTO.setPagination(totalPage,page);
+
         Integer offset = size * (page-1);
+        if(offset<0) offset=0;
         List<Invitation> invitations = invitationMapper.list(offset,size);
+        List<InvitationDTO> invitationDTOList = new ArrayList<>();
+
+
+        for (Invitation invitation : invitations) {
+            User user = userMapper.findById(invitation.getCreator());
+            InvitationDTO invitationDTO = new InvitationDTO();
+            BeanUtils.copyProperties(invitation,invitationDTO);
+            invitationDTO.setUser(user);
+            invitationDTOList.add(invitationDTO);
+        }
+        paginationDTO.setInvitations(invitationDTOList);
+
+        return paginationDTO;
+    }
+
+    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        Integer totalPage;
+        Integer totalCount = invitationMapper.countByUserId(userId);
+
+        if(totalCount%size==0) {
+            totalPage = totalCount/size;
+        } else {
+            totalPage = totalCount/size+1;
+        }
+
+
+        if(page<1) page=1;
+        if(page>totalPage) page=totalPage;
+
+        paginationDTO.setPagination(totalPage,page);
+
+        Integer offset = size * (page-1);
+        if(offset<0) offset=0;
+        List<Invitation> invitations = invitationMapper.listByUserId(userId,offset,size);
         List<InvitationDTO> invitationDTOList = new ArrayList<>();
 
 

@@ -18,4 +18,10 @@ public interface InvitationMapper {
 
     @Select("select count(1) from invitation")
     Integer count();
+
+    @Select("select * from invitation where creator = #{userId} limit #{size} offset #{offset}")
+    List<Invitation> listByUserId(@Param(value="userId") Integer userId, @Param(value="offset") Integer offset, @Param(value="size") Integer size);
+
+    @Select("select count(1) from invitation where creator = #{userId}")
+    Integer countByUserId(@Param(value="userId") Integer userId);
 }
