@@ -1,9 +1,6 @@
 package sera.sse.community.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import sera.sse.community.model.User;
 
 @Mapper
@@ -14,4 +11,8 @@ public interface UserMapper {
     User findByToken(@Param("token") String token);
     @Select("select * from user1 where id=#{id}")
     User findById(@Param("id") Integer id);
+    @Select("select * from user1 where account_id=#{accountId}")
+    User findByAccountId(@Param("accountId") String accountId);
+    @Update("update user1 set name=#{name},token=#{token},gmt_modified=#{gmtModified},avatar_url=#{avatarUrl} where id=#{id}")
+    void update(User user);
 }
