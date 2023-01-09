@@ -87,4 +87,13 @@ public class InvitationService {
 
         return paginationDTO;
     }
+
+    public InvitationDTO getById(Integer id) {
+        Invitation invitation = invitationMapper.getById(id);
+        InvitationDTO invitationDTO = new InvitationDTO();
+        BeanUtils.copyProperties(invitation,invitationDTO);
+        User user = userMapper.findById(invitation.getCreator());
+        invitationDTO.setUser(user);
+        return invitationDTO;
+    }
 }

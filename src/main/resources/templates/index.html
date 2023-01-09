@@ -25,7 +25,9 @@
 <!--                    <span th:text="${invitation.user.getAvatarUrl()}"></span>-->
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${invitation.getTitle()}"></h4>
+                    <h4 class="media-heading">
+                        <a th:href="@{'/invitation/'+ ${invitation.id}}" th:text="${invitation.getTitle()}"></a>
+                    </h4>
                     <span th:text="${invitation.getDescription()}"></span>
                     <br>
                     <span class="text-desc">

@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import sera.sse.community.dto.InvitationDTO;
 import sera.sse.community.model.Invitation;
 
 import java.util.List;
@@ -24,4 +25,7 @@ public interface InvitationMapper {
 
     @Select("select count(1) from invitation where creator = #{userId}")
     Integer countByUserId(@Param(value="userId") Integer userId);
+
+    @Select("select * from invitation where id = #{id}")
+    Invitation getById(@Param("id") Integer id);
 }
