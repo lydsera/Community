@@ -13,7 +13,7 @@ public class InvitationController {
     @Autowired
     private InvitationService invitationService;
     @GetMapping("/invitation/{id}")
-    public String invitation(@PathVariable(name = "id") Integer id,
+    public String invitation(@PathVariable(name = "id") Long id,
                              Model model){
         InvitationDTO invitationDTO = invitationService.getById(id);
         //增加阅读数

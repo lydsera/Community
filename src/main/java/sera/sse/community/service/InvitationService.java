@@ -61,7 +61,7 @@ public class InvitationService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
 
@@ -104,7 +104,7 @@ public class InvitationService {
         return paginationDTO;
     }
 
-    public InvitationDTO getById(Integer id) {
+    public InvitationDTO getById(Long id) {
         Invitation invitation = invitationMapper.selectByPrimaryKey(id);
         if(invitation == null){
             throw new CustomizeException(CustomizeErrorCode.INVITATION_NOT_FOUND);
@@ -121,6 +121,9 @@ public class InvitationService {
             //发新帖子
             invitation.setGmtCreate(System.currentTimeMillis());
             invitation.setGmtModified(invitation.getGmtCreate());
+            invitation.setViewCount(0);
+            invitation.setLikeCount(0);
+            invitation.setCommentCount(0);
             invitationMapper.insertSelective(invitation);
         }
         else{
@@ -140,7 +143,7 @@ public class InvitationService {
         }
     }
 
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Invitation invitation = new Invitation();
         invitation.setId(id);
         invitation.setViewCount(1);
