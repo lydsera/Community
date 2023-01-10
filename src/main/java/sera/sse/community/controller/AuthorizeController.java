@@ -28,8 +28,8 @@ public class AuthorizeController {
     private String clientSecret;
     @Value("${github.redirect.url}")
     private String redirectUrl;
-    @Autowired
-    private UserMapper userMapper;
+//    @Autowired
+//    private UserMapper userMapper;
     @Autowired
     private UserService userService;
     @GetMapping("/callback")

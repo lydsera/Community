@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sera.sse.community.dto.InvitationDTO;
 import sera.sse.community.dto.PaginationDTO;
+import sera.sse.community.exception.CustomizeErrorCode;
+import sera.sse.community.exception.CustomizeException;
 import sera.sse.community.mapper.InvitationMapper;
 import sera.sse.community.mapper.UserMapper;
 import sera.sse.community.model.Invitation;
@@ -101,6 +103,9 @@ public class InvitationService {
 
     public InvitationDTO getById(Integer id) {
         Invitation invitation = invitationMapper.selectByPrimaryKey(id);
+        if(invitation == null){
+            throw new CustomizeException(CustomizeErrorCode.INVITATION_NOT_FOUND);
+        }
         InvitationDTO invitationDTO = new InvitationDTO();
         BeanUtils.copyProperties(invitation,invitationDTO);
         User user = userMapper.selectByPrimaryKey(invitation.getCreator());
@@ -125,7 +130,10 @@ public class InvitationService {
             InvitationExample example = new InvitationExample();
             example.createCriteria()
                     .andIdEqualTo(invitation.getId());
-            invitationMapper.updateByExample(updateInvitation,example);
+            int updated = invitationMapper.updateByExampleSelective(updateInvitation,example);
+            if(updated!=1){
+                throw new CustomizeException(CustomizeErrorCode.INVITATION_NOT_FOUND);
+            }
         }
     }
 }
