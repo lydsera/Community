@@ -9,6 +9,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import sera.sse.community.mapper.UserMapper;
 import sera.sse.community.model.User;
+import sera.sse.community.model.UserExample;
+
+import java.util.List;
 
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
@@ -22,10 +25,13 @@ public class SessionInterceptor implements HandlerInterceptor {
                 if(cookie.getName().equals("token"))
                 {
                     String token = cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if(user != null)
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if(users.size()!=0)
                     {
-                        request.getSession().setAttribute("user",user);
+                        request.getSession().setAttribute("user",users.get(0));
                     }
                     break;
                 }

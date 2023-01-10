@@ -11,3 +11,12 @@
 ## 工具
 Git  
 Lombok
+
+## 脚本
+```bash
+mvn flyway:migrate
+```
+也可以手动执行resources/db/migration下的sql文件  
+```bash
+mvn '-Dmybatis.generator.overwrite=true' mybatis-generator:generate
+```

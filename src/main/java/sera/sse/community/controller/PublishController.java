@@ -5,17 +5,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import sera.sse.community.dto.InvitationDTO;
 import sera.sse.community.mapper.InvitationMapper;
 import sera.sse.community.model.Invitation;
 import sera.sse.community.model.User;
+import sera.sse.community.service.InvitationService;
 
 
 @Controller
 public class PublishController {
     @Autowired
-    private InvitationMapper invitationMapper;
+    private InvitationService invitationService;
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name="id") Integer id,
+                       Model model){
+        InvitationDTO invitation = invitationService.getById(id);
+        model.addAttribute("title",invitation.getTitle());
+        model.addAttribute("description",invitation.getDescription());
+        model.addAttribute("tag",invitation.getTag());
+        model.addAttribute("id",invitation.getId());
+        return "publish";
+    }
     @GetMapping("/publish")
     public String publish(){
         return  "publish";
@@ -25,6 +38,7 @@ public class PublishController {
             @RequestParam(value="title",required = false) String title,
             @RequestParam(value="description",required = false) String description,
             @RequestParam(value="tag",required = false) String tag,
+            @RequestParam(value="id",required = false) Integer id,
             HttpServletRequest request,
             Model model)
     {
@@ -59,10 +73,9 @@ public class PublishController {
         invitation.setDescription(description);
         invitation.setTag(tag);
         invitation.setCreator(user.getId());
-        invitation.setGmtCreate(System.currentTimeMillis());
-        invitation.setGmtModified(invitation.getGmtCreate());
+        invitation.setId(id);
 
-        invitationMapper.create(invitation);
+        invitationService.createOrUpdate(invitation);
         return "redirect:/";
     }
 }

@@ -1,5 +1,6 @@
 package sera.sse.community.service;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import sera.sse.community.dto.PaginationDTO;
 import sera.sse.community.mapper.InvitationMapper;
 import sera.sse.community.mapper.UserMapper;
 import sera.sse.community.model.Invitation;
+import sera.sse.community.model.InvitationExample;
 import sera.sse.community.model.User;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class InvitationService {
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
-        Integer totalCount = invitationMapper.count();
+        Integer totalCount = (int) invitationMapper.countByExample(new InvitationExample());
 
         if(totalCount%size==0) {
             totalPage = totalCount/size;
@@ -37,12 +39,13 @@ public class InvitationService {
 
         Integer offset = size * (page-1);
         if(offset<0) offset=0;
-        List<Invitation> invitations = invitationMapper.list(offset,size);
+
+        List<Invitation> invitations = invitationMapper.selectByExampleWithBLOBsWithRowbounds(new InvitationExample(),new RowBounds(offset,size));
         List<InvitationDTO> invitationDTOList = new ArrayList<>();
 
 
         for (Invitation invitation : invitations) {
-            User user = userMapper.findById(invitation.getCreator());
+            User user = userMapper.selectByPrimaryKey(invitation.getCreator());
             InvitationDTO invitationDTO = new InvitationDTO();
             BeanUtils.copyProperties(invitation,invitationDTO);
             invitationDTO.setUser(user);
@@ -56,7 +59,11 @@ public class InvitationService {
     public PaginationDTO list(Integer userId, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
-        Integer totalCount = invitationMapper.countByUserId(userId);
+
+        InvitationExample invitationExample = new InvitationExample();
+        invitationExample.createCriteria()
+                .andCreatorEqualTo(userId);
+        Integer totalCount = (int) invitationMapper.countByExample(invitationExample);
 
         if(totalCount%size==0) {
             totalPage = totalCount/size;
@@ -72,12 +79,16 @@ public class InvitationService {
 
         Integer offset = size * (page-1);
         if(offset<0) offset=0;
-        List<Invitation> invitations = invitationMapper.listByUserId(userId,offset,size);
+
+        InvitationExample example = new InvitationExample();
+        example.createCriteria()
+                .andCreatorEqualTo(userId);
+        List<Invitation> invitations = invitationMapper.selectByExampleWithBLOBsWithRowbounds(example,new RowBounds(offset,size));
         List<InvitationDTO> invitationDTOList = new ArrayList<>();
 
 
         for (Invitation invitation : invitations) {
-            User user = userMapper.findById(invitation.getCreator());
+            User user = userMapper.selectByPrimaryKey(invitation.getCreator());
             InvitationDTO invitationDTO = new InvitationDTO();
             BeanUtils.copyProperties(invitation,invitationDTO);
             invitationDTO.setUser(user);
@@ -89,11 +100,32 @@ public class InvitationService {
     }
 
     public InvitationDTO getById(Integer id) {
-        Invitation invitation = invitationMapper.getById(id);
+        Invitation invitation = invitationMapper.selectByPrimaryKey(id);
         InvitationDTO invitationDTO = new InvitationDTO();
         BeanUtils.copyProperties(invitation,invitationDTO);
-        User user = userMapper.findById(invitation.getCreator());
+        User user = userMapper.selectByPrimaryKey(invitation.getCreator());
         invitationDTO.setUser(user);
         return invitationDTO;
+    }
+
+    public void createOrUpdate(Invitation invitation) {
+        if(invitation.getId()==null){
+            //发新帖子
+            invitation.setGmtCreate(System.currentTimeMillis());
+            invitation.setGmtModified(invitation.getGmtCreate());
+            invitationMapper.insertSelective(invitation);
+        }
+        else{
+            //编辑已有帖子
+            Invitation updateInvitation = new Invitation();
+            updateInvitation.setGmtModified(System.currentTimeMillis());
+            updateInvitation.setTitle(invitation.getTitle());
+            updateInvitation.setDescription(invitation.getDescription());
+            updateInvitation.setTag(invitation.getTag());
+            InvitationExample example = new InvitationExample();
+            example.createCriteria()
+                    .andIdEqualTo(invitation.getId());
+            invitationMapper.updateByExample(updateInvitation,example);
+        }
     }
 }
