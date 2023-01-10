@@ -16,6 +16,8 @@ public class InvitationController {
     public String invitation(@PathVariable(name = "id") Integer id,
                              Model model){
         InvitationDTO invitationDTO = invitationService.getById(id);
+        //增加阅读数
+        invitationService.incView(id);
         model.addAttribute("invitation",invitationDTO);
         return "invitation";
     }

@@ -8,6 +8,7 @@ import sera.sse.community.dto.InvitationDTO;
 import sera.sse.community.dto.PaginationDTO;
 import sera.sse.community.exception.CustomizeErrorCode;
 import sera.sse.community.exception.CustomizeException;
+import sera.sse.community.mapper.InvitationExtMapper;
 import sera.sse.community.mapper.InvitationMapper;
 import sera.sse.community.mapper.UserMapper;
 import sera.sse.community.model.Invitation;
@@ -23,6 +24,8 @@ public class InvitationService {
     private InvitationMapper invitationMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private InvitationExtMapper invitationExtMapper;
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
@@ -135,5 +138,12 @@ public class InvitationService {
                 throw new CustomizeException(CustomizeErrorCode.INVITATION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Invitation invitation = new Invitation();
+        invitation.setId(id);
+        invitation.setViewCount(1);
+        invitationExtMapper.incView(invitation);
     }
 }
