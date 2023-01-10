@@ -2,6 +2,7 @@ package sera.sse.community.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sera.sse.community.enums.CommentTypeEnum;
 import sera.sse.community.exception.CustomizeErrorCode;
 import sera.sse.community.exception.CustomizeException;
@@ -19,6 +20,7 @@ public class CommentService {
     private InvitationMapper invitationMapper;
     @Autowired
     private InvitationExtMapper invitationExtMapper;
+    @Transactional
     public void insert(Comment comment) {
         if(comment.getParentId()==null||comment.getParentId()==0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
