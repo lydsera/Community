@@ -35,6 +35,22 @@ body{
     margin-top: 25px;
 }
 
+.invitation-tag {
+    margin-right: 5px;
+}
+
+.invitation-related {
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
+}
+
+.invitation-wechat {
+    width: 95%;
+}
+
 .community-menu {
     display: block;
     color:#999;

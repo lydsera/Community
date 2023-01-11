@@ -44,8 +44,9 @@ public class InvitationService {
 
         Integer offset = size * (page-1);
         if(offset<0) offset=0;
-
-        List<Invitation> invitations = invitationMapper.selectByExampleWithBLOBsWithRowbounds(new InvitationExample(),new RowBounds(offset,size));
+        InvitationExample invitationExample = new InvitationExample();
+        invitationExample.setOrderByClause("gmt_create desc");
+        List<Invitation> invitations = invitationMapper.selectByExampleWithBLOBsWithRowbounds(invitationExample,new RowBounds(offset,size));
         List<InvitationDTO> invitationDTOList = new ArrayList<>();
 
 
