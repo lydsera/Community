@@ -8,10 +8,7 @@ import sera.sse.community.dto.CommentDTO;
 import sera.sse.community.enums.CommentTypeEnum;
 import sera.sse.community.exception.CustomizeErrorCode;
 import sera.sse.community.exception.CustomizeException;
-import sera.sse.community.mapper.CommentMapper;
-import sera.sse.community.mapper.InvitationExtMapper;
-import sera.sse.community.mapper.InvitationMapper;
-import sera.sse.community.mapper.UserMapper;
+import sera.sse.community.mapper.*;
 import sera.sse.community.model.*;
 
 import java.util.ArrayList;
@@ -30,6 +27,8 @@ public class CommentService {
     private InvitationExtMapper invitationExtMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
     @Transactional
     public void insert(Comment comment) {
         if(comment.getParentId()==null||comment.getParentId()==0){
@@ -46,6 +45,11 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insertSelective(comment);
+            //增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
         }
         else{
             //回复帖子
