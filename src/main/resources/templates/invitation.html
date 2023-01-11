@@ -14,16 +14,17 @@
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main profile">
     <div class="row">
+        <!--左边-->
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <!--正文-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h4><span th:text="${invitation.title}"></span></h4>
+                <h4 class="invitation-title"><span th:text="${invitation.title}"></span></h4>
                 <span class="text-desc">
                 帖主：<span th:text="${invitation.user.name}"></span> |
                 发布时间：<span th:text="${#dates.format(invitation.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span> |
                 浏览数：<span th:text="${invitation.viewCount}"></span>
             </span>
-                <hr>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${invitation.description}"></div>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <a th:href="@{'/publish/'+${invitation.id}}" class="community-menu" th:if="${session.user!=null && session.user.id==invitation.creator}">
@@ -32,53 +33,62 @@
                 </a>
             </div>
             <!--回复列表-->
-            <h4>
-                <span th:text="${invitation.commentCount}"></span> 个回复
-            </h4>
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment : ${comments}">
-                <div class="media">
-                    <div class="media-left">
-                        <a href="#">
-                            <img class="media-object img-rounded"
-                                 th:src="${comment.user.getAvatarUrl()}">
-                        </a>
-                    </div>
-                    <div class="media-body">
-                        <h5 class="media-heading">
-                            <span th:text="${comment.user.name}"></span>
-                        </h5>
-                        <div th:text="${comment.content}"></div>
-                        <div class="menu">
-                            <span class="glyphicon glyphicon-thumbs-up icon"></span>
-                            <span class="glyphicon glyphicon-comment icon"></span>
-                            <span class="pull-right" th:text="${#dates.format(comment.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span>
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <h4>
+                    <span th:text="${invitation.commentCount}"></span> 个回复
+                </h4>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment : ${comments}">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object img-rounded"
+                                     th:src="${comment.user.getAvatarUrl()}">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading">
+                                <span th:text="${comment.user.name}"></span>
+                            </h5>
+                            <div th:text="${comment.content}"></div>
+                            <div class="menu">
+                                <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                                <span class="glyphicon glyphicon-comment icon"></span>
+                                <span class="pull-right" th:text="${#dates.format(comment.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!--回复输入框-->
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
-                <div class="media">
-                    <div class="media-left">
-                        <a href="#">
-                            <img class="media-object img-rounded"
-                                 th:src="${invitation.user.getAvatarUrl()}">
-                        </a>
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <h4>
+                    评论
+                </h4>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object img-rounded"
+                                     th:src="${invitation.user.getAvatarUrl()}">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading">
+                                <span th:text="${invitation.user.name}"></span>
+                            </h5>
+                        </div>
                     </div>
-                    <div class="media-body">
-                        <h5 class="media-heading">
-                            <span th:text="${invitation.user.name}"></span>
-                        </h5>
-                    </div>
+                    <input type="hidden" id="invitation_id" th:value="${invitation.id}">
+                    <textarea class="form-control comment" rows="6" id="comment_content"></textarea>
+                    <button type="button" class="btn btn-success btn-comment" onclick="post()">回复</button>
                 </div>
-                <input type="hidden" id="invitation_id" th:value="${invitation.id}">
-                <textarea class="form-control comment" rows="6" id="comment_content"></textarea>
-                <button type="button" class="btn btn-success btn-comment" onclick="post()">回复</button>
             </div>
 
         </div>
+
+        <!--右边-->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>发起人</h4>
