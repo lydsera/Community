@@ -33,6 +33,7 @@
         <table tableName="user1" domainObjectName="User" ></table>
         <table tableName="invitation" domainObjectName="Invitation" ></table>
         <table tableName="comment" domainObjectName="Comment" ></table>
+        <table tableName="notification" domainObjectName="Notification" ></table>
 
     </context>
 </generatorConfiguration>

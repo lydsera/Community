@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sera.sse.community.dto.PaginationDTO;
 import sera.sse.community.model.User;
 import sera.sse.community.service.InvitationService;
+import sera.sse.community.service.NotificationService;
 
 @Controller
 public class ProfileController {
     @Autowired
     private InvitationService invitationService;
+    @Autowired
+    private NotificationService notificationService;
     @GetMapping("/profile/{action}")
     public String profile(HttpServletRequest request,
                           @PathVariable(name = "action") String action,
@@ -28,13 +31,16 @@ public class ProfileController {
         if("invitations".equals(action)){
             model.addAttribute("section","invitations");
             model.addAttribute("sectionName","我的帖子");
+            PaginationDTO paginationDTO = invitationService.list(user.getId(), page, size);
+            model.addAttribute("pagination",paginationDTO);
         }else if("replies".equals(action)){
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
             model.addAttribute("section","replies");
+            model.addAttribute("pagination", paginationDTO);
             model.addAttribute("sectionName","最新回复");
         }
 
-        PaginationDTO paginationDTO = invitationService.list(user.getId(), page, size);
-        model.addAttribute("pagination",paginationDTO);
+
         return "profile";
     }
 }

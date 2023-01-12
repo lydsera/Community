@@ -60,7 +60,7 @@ public class InvitationService {
             invitationDTO.setUser(user);
             invitationDTOList.add(invitationDTO);
         }
-        paginationDTO.setInvitations(invitationDTOList);
+        paginationDTO.setData(invitationDTOList);
 
         return paginationDTO;
     }
@@ -103,7 +103,7 @@ public class InvitationService {
             invitationDTO.setUser(user);
             invitationDTOList.add(invitationDTO);
         }
-        paginationDTO.setInvitations(invitationDTOList);
+        paginationDTO.setData(invitationDTOList);
 
         return paginationDTO;
     }
