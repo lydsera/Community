@@ -29,7 +29,11 @@
                     <span class="text-desc">
                         <span th:text="${invitation.getCommentCount()}"></span> 个评论 •
                         <span th:text="${invitation.getViewCount()}"></span> 次浏览 •
-                        <span th:text="${#dates.format(invitation.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span>
+                        <span th:text="${#dates.format(invitation.getGmtCreate(),'yyyy-MM-dd HH:mm')}"></span> •
+                        <a th:href="@{'/publish/'+${invitation.id}}" class="community-menu"
+                           th:if="${session.user!=null && session.user.id==invitation.creator}">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>
+                        </a>
                     </span>
                 </div>
             </div>
