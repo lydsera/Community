@@ -23,11 +23,13 @@ public class InvitationController {
     public String invitation(@PathVariable(name = "id") Long id,
                              Model model){
         InvitationDTO invitationDTO = invitationService.getById(id);
+        List<InvitationDTO> relatedInvitations = invitationService.selectRelated(invitationDTO);
         List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.INVITATION);
         //增加阅读数
         invitationService.incView(id);
         model.addAttribute("invitation",invitationDTO);
         model.addAttribute("comments",comments);
+        model.addAttribute("relatedInvitations",relatedInvitations);
         return "invitation";
     }
 }

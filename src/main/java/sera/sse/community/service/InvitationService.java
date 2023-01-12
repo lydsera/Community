@@ -1,5 +1,6 @@
 package sera.sse.community.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import sera.sse.community.model.InvitationExample;
 import sera.sse.community.model.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InvitationService {
@@ -149,5 +152,29 @@ public class InvitationService {
         invitation.setId(id);
         invitation.setViewCount(1);
         invitationExtMapper.incView(invitation);
+    }
+
+    public List<InvitationDTO> selectRelated(InvitationDTO queryDTO) {
+        if (StringUtils.isBlank(queryDTO.getTag())) {
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(queryDTO.getTag(), "，");
+        String regexpTag = Arrays
+                .stream(tags)
+//                .filter(StringUtils::isNotBlank)
+//                .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+//                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.joining("|"));
+        Invitation invitation = new Invitation();
+        invitation.setId(queryDTO.getId());
+        invitation.setTag(regexpTag);
+
+        List<Invitation> invitations = invitationExtMapper.selectRelated(invitation);
+        List<InvitationDTO> invitationDTOS = invitations.stream().map(q -> {
+            InvitationDTO invitationDTO = new InvitationDTO();
+            BeanUtils.copyProperties(q, invitationDTO);
+            return invitationDTO;
+        }).collect(Collectors.toList());
+        return invitationDTOS;
     }
 }

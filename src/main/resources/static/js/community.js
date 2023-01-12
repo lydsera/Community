@@ -25,6 +25,7 @@ function comment2target(targetId, type, content) {
                 window.location.reload();
             } else {
                 if (response.code == 2003) {
+                    debugger;
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
                         // $('#myModal').modal({});

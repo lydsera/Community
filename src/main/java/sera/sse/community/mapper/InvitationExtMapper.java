@@ -11,4 +11,5 @@ public interface InvitationExtMapper {
 
     int incView(Invitation record);
     int incCommentCount(Invitation record);
+    List<Invitation> selectRelated(Invitation invitation);
 }
