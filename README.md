@@ -6,7 +6,8 @@
 [GitHub OAuth](https://v3.bootcss.com/getting-started/)  
 [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#setting-attribute-values)  
 [SpringMVC](https://docs.spring.io/spring-framework/docs/5.0.3.RELEASE/spring-framework-reference/web.html#mvc-handlermapping-interceptor)  
-[jQuery API 文档](https://api.jquery.com/)
+[jQuery API 文档](https://api.jquery.com/)  
+[开源在线 Markdown 编辑器](https://pandao.github.io/editor.md/)
 
 ## 工具
 Git  
