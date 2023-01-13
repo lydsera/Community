@@ -196,4 +196,14 @@ public class InvitationService {
         }).collect(Collectors.toList());
         return invitationDTOS;
     }
+
+    public List<Invitation> listhot() {
+
+
+        InvitationExample example = new InvitationExample();
+        example.setOrderByClause("view_count desc");
+        List<Invitation> invitations = invitationMapper.selectByExampleWithRowbounds(example,new RowBounds(0,5));
+
+        return invitations;
+    }
 }
