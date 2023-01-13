@@ -21,7 +21,7 @@ public class FileController {
     public FileDTO upload(HttpServletRequest request) {
         FileDTO fileDTO = new FileDTO();
         fileDTO.setSuccess(1);
-        fileDTO.setUrl("/images/gitee.png");
+        fileDTO.setUrl("/images/fire.png");
         return fileDTO;
 
     }
