@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sera.sse.community.dto.InvitationDTO;
+import sera.sse.community.dto.InvitationQueryDTO;
 import sera.sse.community.dto.PaginationDTO;
 import sera.sse.community.exception.CustomizeErrorCode;
 import sera.sse.community.exception.CustomizeException;
@@ -29,10 +30,24 @@ public class InvitationService {
     private UserMapper userMapper;
     @Autowired
     private InvitationExtMapper invitationExtMapper;
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search,Integer page, Integer size) {
+        if (StringUtils.isNotBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays
+                    .stream(tags)
+//                    .filter(StringUtils::isNotBlank)
+//                    .map(t -> t.replace("+", "").replace("*", "").replace("?", ""))
+//                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.joining("|"));
+        }
+
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
-        Integer totalCount = (int) invitationMapper.countByExample(new InvitationExample());
+
+        InvitationQueryDTO invitationQueryDTO = new InvitationQueryDTO();
+        invitationQueryDTO.setSearch(search);
+
+        Integer totalCount =  invitationExtMapper.countBySearch(invitationQueryDTO);
 
         if(totalCount%size==0) {
             totalPage = totalCount/size;
@@ -47,9 +62,13 @@ public class InvitationService {
 
         Integer offset = size * (page-1);
         if(offset<0) offset=0;
-        InvitationExample invitationExample = new InvitationExample();
-        invitationExample.setOrderByClause("gmt_create desc");
-        List<Invitation> invitations = invitationMapper.selectByExampleWithBLOBsWithRowbounds(invitationExample,new RowBounds(offset,size));
+
+//        InvitationExample invitationExample = new InvitationExample();
+//        invitationExample.setOrderByClause("gmt_create desc");
+        invitationQueryDTO.setSize(size);
+        invitationQueryDTO.setPage(offset);
+//        List<Invitation> invitations = invitationMapper.selectByExampleWithBLOBsWithRowbounds(invitationExample,new RowBounds(offset,size));
+        List<Invitation> invitations = invitationExtMapper.selectBySearch(invitationQueryDTO);
         List<InvitationDTO> invitationDTOList = new ArrayList<>();
 
 

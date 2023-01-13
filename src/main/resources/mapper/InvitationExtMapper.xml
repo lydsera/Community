@@ -44,4 +44,23 @@
     </where>
     order by gmt_create desc limit 20
   </select>
+
+  <select id="countBySearch" parameterType="sera.sse.community.dto.InvitationQueryDTO" resultType="java.lang.Integer">
+    select count(*) from INVITATION
+    <where>
+      <if test="search != null">
+        and title regexp #{search}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectBySearch" parameterType="sera.sse.community.dto.InvitationQueryDTO" resultMap="BaseResultMap">
+    select * from INVITATION
+    <where>
+      <if test="search != null">
+        and title regexp #{search}
+      </if>
+    </where>
+    order by gmt_create desc limit #{size} offset #{page}
+  </select>
 </mapper>
