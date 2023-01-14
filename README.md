@@ -9,10 +9,6 @@
 [jQuery API 文档](https://api.jquery.com/)  
 [开源在线 Markdown 编辑器](https://pandao.github.io/editor.md/)
 
-## 工具
-Git  
-Lombok
-
 ## 脚本
 ```bash
 mvn flyway:migrate
@@ -21,3 +17,9 @@ mvn flyway:migrate
 ```bash
 mvn '-Dmybatis.generator.overwrite=true' mybatis-generator:generate
 ```
+
+## 如何运行
+1.安装jdk，maven，idea等  
+2.克隆代码到本地  
+3.依次运行上述两个脚本  
+4.在idea中运行  

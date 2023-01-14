@@ -92,7 +92,7 @@ public class InvitationService {
         invitationExample.createCriteria()
                 .andCreatorEqualTo(userId);
         Integer totalCount = (int) invitationMapper.countByExample(invitationExample);
-
+        //分页处理
         if(totalCount%size==0) {
             totalPage = totalCount/size;
         } else {

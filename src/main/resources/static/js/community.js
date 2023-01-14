@@ -25,12 +25,12 @@ function comment2target(targetId, type, content) {
                 window.location.reload();
             } else {
                 if (response.code == 2003) {
-                    debugger;
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        // $('#myModal').modal({});
+                        
                         window.open("https://github.com/login/oauth/authorize?client_id=4baac59f57313f3bdbdd&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
                         window.localStorage.setItem("closable", true);
+
                     }
                 } else {
                     alert(response.message);
